@@ -1,14 +1,18 @@
 NAME
-    DelayLine - Simple pipeline data stucture
+    DelayLine - Simple time-delay data stucture
 
 SYNOPSIS
         use DelayLine;
 
         my $dl = DelayLine->new(delay => $defaultdelay);
 
-        $dl->in($obj);
+        $dl->in($item);
 
-        my $obj = $dl->out();
+        [ ... ]
+
+        if (my $ob = $dl->out()) {
+            # do stuff with $ob
+        }
 
 DESCRIPTION
     The `DelayLine' is a simple two-port data structure, like a FIFO, but
@@ -83,6 +87,14 @@ DESCRIPTION
 BUGS
     This is a fairly simple module, so no serious bugs are expected. Patches
     are welcome, though.
+
+RELEASE HISTORY
+    v0.02 - 2000-jul-22
+    Fixed test for multiple unknown args. Removed superfluous test output.
+    Streamlined debug output.
+
+    v0.01 - 2000-jul-13
+    Initial release.
 
 COPYRIGHT
     Copyright (c) 2000 Lars Thegler. All rights reserved.

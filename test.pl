@@ -1,4 +1,4 @@
-# $Id: test.pl,v 1.3 2000/07/13 15:32:31 lth Exp $
+# $Id: test.pl,v 1.5 2000/07/22 11:54:22 lth Exp $
 
 use strict;
 use Test;
@@ -27,7 +27,7 @@ ok( my $dl = DelayLine->new('DELAY' => 42) );
 eval { my $dl = DelayLine->new('-badarg' => 42) };
 ok($@, "/^DelayLine: Unknown argument '-badarg' at /");
 eval { my $dl = DelayLine->new('-badarg' => 42, '-anotherbadarg' => 42) };
-ok($@, "/^DelayLine: Unknown arguments '-badarg', '-anotherbadarg' at /");
+ok($@, "/^DelayLine: Unknown arguments /");
 
 # check attributes
 ok($dl->delay, 42);
@@ -53,7 +53,6 @@ ok($dl->out, $a); # now a is ready
 $dl->in($a, 3);
 my $ob;
 until ($ob = $dl->out) {
-    print '.';
     sleep 1;
 }
 ok($ob, $a);

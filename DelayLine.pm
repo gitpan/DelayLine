@@ -1,12 +1,12 @@
 package DelayLine;
 
-# $Id: DelayLine.pm,v 1.2 2000/07/13 15:30:14 lth Exp $
+# $Id: DelayLine.pm,v 1.4 2000/07/22 11:53:48 lth Exp $
 
 use strict;
 use Carp;
 
 use vars qw($VERSION);
-$VERSION = '0.01';
+$VERSION = '0.02';
 
 my %fields = (
 	      _LINE => [],
@@ -40,7 +40,7 @@ sub new {
 
     # complain about unknown arguments
     if (my @unknown = keys %args) {
-	croak "DelayLine: Unknown argument",
+	croak __PACKAGE__, ": Unknown argument",
 	  (@unknown == 1 ? ' ' : 's '),
 	    join(', ', map {"'$_'"} @unknown);
     }
@@ -68,9 +68,6 @@ sub in {
     my $now = time();
     $delay = $self->delay unless defined $delay;
 
-    print STDERR "in\n"
-      if $self->{DEBUG};
-
     my %entry = (
 		 'OBJ' => $obj,
 		 'DELAY' => $delay,
@@ -78,7 +75,7 @@ sub in {
 		 'OUTTIME' => $now + $delay,
 		);
 
-    print STDERR "DelayLine::in obj=$obj delay=$entry{DELAY} outtime=$entry{OUTTIME}\n"
+    print STDERR __PACKAGE__, "::in obj='$obj' delay=$entry{DELAY} outtime=$entry{OUTTIME}\n"
       if $self->{DEBUG};
 
     # push new object onto delayline
@@ -96,7 +93,7 @@ sub out {
 
     # return immediately if the DelayLine is empty
     unless (@{$self->{_LINE}}) {
-	print STDERR "DelayLine::out now=$now empty\n"
+	print STDERR __PACKAGE__, "::out now=$now empty\n"
 	  if $self->{DEBUG};
 	return;
     }
@@ -104,13 +101,13 @@ sub out {
     # return overdue object
     if ($self->{_LINE}->[0]->{OUTTIME} <= $now) {
 	my $obj = (shift @{$self->{_LINE}})->{OBJ};
-	print STDERR "DelayLine::out now=$now obj=$obj\n"
+	print STDERR __PACKAGE__, "::out now=$now obj='$obj'\n"
 	  if $self->{DEBUG};
 	return $obj;
     }
 
     # nothing ready yet
-    print STDERR "DelayLine: out now=$now\n"
+    print STDERR __PACKAGE__, "::out now=$now next=$self->{_LINE}->[0]->{OUTTIME}\n"
       if $self->{DEBUG};
     return;
 }
@@ -223,6 +220,18 @@ If the debug value is set (true), calling any of the 'active' methods
 
 This is a fairly simple module, so no serious bugs are
 expected. Patches are welcome, though.
+
+=head1 RELEASE HISTORY
+
+=item v0.02 - 2000-jul-22
+
+Fixed test for multiple unknown args.
+Removed superfluous test output.
+Streamlined debug output.
+
+=item v0.01 - 2000-jul-13
+
+Initial release.
 
 =head1 COPYRIGHT
 
